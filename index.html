@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JPT 1.0 — AI Chat</title>
+<title>JPT 1.0 | AI Assistant</title>
 
 <style>
 :root {
   --bg: #0b0f19;
   --panel: #111827;
-  --panel2: #1b2433;
+  --card: #1b2433;
   --border: #293548;
   --text: #f3f6fc;
   --muted: #9aa8bb;
   --blue: #3478f6;
-  --blue-hover: #2563eb;
-  --danger: #ef4444;
+  --green: #55d99b;
+  --red: #ff7777;
 }
 
 * {
@@ -51,104 +51,97 @@ button {
   height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: var(--bg);
 }
 
 .header {
-  min-height: 68px;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 16px;
+  padding: 12px;
+  min-height: 68px;
   background: var(--panel);
   border-bottom: 1px solid var(--border);
 }
 
 .logo {
-  width: 42px;
-  height: 42px;
-  flex-shrink: 0;
+  width: 43px;
+  height: 43px;
   display: grid;
   place-items: center;
-  background: var(--blue);
+  flex-shrink: 0;
   border-radius: 13px;
-  font-size: 24px;
-  font-weight: 800;
+  background: var(--blue);
+  font-size: 25px;
+  font-weight: bold;
 }
 
 .brand {
-  min-width: 0;
   flex: 1;
+  min-width: 0;
 }
 
 .brand h1 {
-  margin: 0;
   font-size: 19px;
+  margin: 0;
 }
 
 .status {
-  color: #55d99b;
   font-size: 12px;
-  margin-top: 4px;
+  color: var(--green);
+  margin-top: 5px;
 }
 
-.api-button {
+.header button {
+  background: var(--card);
   border: 1px solid var(--border);
   color: var(--text);
-  background: var(--panel2);
-  padding: 10px 12px;
+  padding: 10px;
   border-radius: 10px;
-  font-size: 13px;
-}
-
-.api-button:hover {
-  border-color: var(--blue);
+  font-size: 12px;
 }
 
 .messages {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 20px 14px;
+  padding: 18px 12px;
   display: flex;
   flex-direction: column;
   gap: 18px;
-  scroll-behavior: smooth;
 }
 
 .welcome {
-  text-align: center;
   margin: auto 0;
-  padding: 24px 10px;
+  padding: 25px 12px;
+  text-align: center;
 }
 
-.welcome-logo {
-  width: 72px;
-  height: 72px;
+.welcome-icon {
+  width: 75px;
+  height: 75px;
+  margin: 0 auto 18px;
   display: grid;
   place-items: center;
-  margin: 0 auto 18px;
   border-radius: 24px;
-  background: linear-gradient(135deg, #3478f6, #8055ee);
+  background: linear-gradient(135deg, #3478f6, #8155ed);
   font-size: 40px;
-  font-weight: 800;
+  font-weight: bold;
 }
 
 .welcome h2 {
-  font-size: 25px;
   margin: 0 0 10px;
 }
 
 .welcome p {
   color: var(--muted);
-  line-height: 1.6;
+  line-height: 1.7;
   font-size: 14px;
 }
 
 .message {
   display: flex;
-  gap: 9px;
   align-items: flex-start;
+  gap: 9px;
   width: 100%;
 }
 
@@ -162,9 +155,9 @@ button {
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  border-radius: 11px;
-  background: var(--panel2);
-  font-size: 14px;
+  border-radius: 10px;
+  background: var(--card);
+  font-size: 13px;
   font-weight: bold;
 }
 
@@ -174,14 +167,14 @@ button {
 }
 
 .bubble {
-  max-width: min(78%, 650px);
+  max-width: 82%;
   padding: 12px 14px;
+  background: var(--card);
   border-radius: 15px;
-  background: var(--panel2);
   font-size: 15px;
   line-height: 1.65;
-  overflow-wrap: anywhere;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .message.user .bubble {
@@ -193,12 +186,8 @@ button {
   border-bottom-left-radius: 5px;
 }
 
-.message.bot .bubble a {
-  color: #91b9ff;
-}
-
 .composer-wrap {
-  padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+  padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
   background: var(--panel);
   border-top: 1px solid var(--border);
 }
@@ -206,11 +195,11 @@ button {
 .composer {
   display: flex;
   align-items: flex-end;
-  gap: 9px;
+  gap: 8px;
   padding: 8px;
   border: 1px solid var(--border);
-  background: var(--bg);
   border-radius: 16px;
+  background: var(--bg);
 }
 
 .composer:focus-within {
@@ -222,45 +211,39 @@ button {
   min-width: 0;
   max-height: 140px;
   resize: none;
+  border: none;
   outline: none;
-  border: 0;
-  color: var(--text);
   background: transparent;
-  padding: 9px 7px;
-  line-height: 1.5;
+  color: var(--text);
+  padding: 10px 6px;
   font-size: 16px;
+  line-height: 1.5;
 }
 
 #userInput::placeholder {
   color: #718096;
 }
 
-.send-button {
-  width: 43px;
-  height: 43px;
+#sendButton {
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
-  border: 0;
+  border: none;
   border-radius: 12px;
-  background: var(--blue);
   color: white;
-  font-size: 19px;
-  font-weight: bold;
+  background: var(--blue);
+  font-size: 20px;
 }
 
-.send-button:hover {
-  background: var(--blue-hover);
-}
-
-.send-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+#sendButton:disabled {
+  opacity: .5;
 }
 
 .footer {
   text-align: center;
-  color: var(--muted);
-  font-size: 11px;
   padding-top: 9px;
+  font-size: 11px;
+  color: var(--muted);
 }
 
 .typing {
@@ -297,8 +280,8 @@ button {
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 18px;
-  background: rgba(0, 0, 0, .72);
+  padding: 16px;
+  background: #000b;
 }
 
 .overlay.open {
@@ -307,117 +290,107 @@ button {
 
 .dialog {
   width: 100%;
-  max-width: 440px;
+  max-width: 430px;
   max-height: 90dvh;
   overflow-y: auto;
+  padding: 22px;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 18px;
-  padding: 22px;
-  box-shadow: 0 20px 70px rgba(0, 0, 0, .4);
 }
 
 .dialog h2 {
-  margin: 0 0 8px;
-  font-size: 22px;
+  margin-top: 0;
 }
 
 .dialog p, .dialog li {
-  color: var(--muted);
   font-size: 14px;
   line-height: 1.6;
-}
-
-.dialog ol {
-  padding-left: 20px;
+  color: var(--muted);
 }
 
 .dialog a {
   color: #8ab4ff;
 }
 
-.key-input-wrap {
+.dialog input[type="password"],
+.dialog input[type="text"] {
+  width: 100%;
+  margin-top: 8px;
+  padding: 13px;
+  border-radius: 10px;
+  outline: none;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.key-row {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.key-input-wrap input {
-  min-width: 0;
+.key-row input {
   flex: 1;
+  min-width: 0;
 }
 
-.dialog input[type="password"],
-.dialog input[type="text"] {
-  width: 100%;
-  background: var(--bg);
-  color: var(--text);
-  border: 1px solid var(--border);
-  padding: 13px;
-  border-radius: 10px;
-  outline: none;
-  margin-top: 8px;
-}
-
-.dialog input:focus {
-  border-color: var(--blue);
-}
-
-.show-button {
+.key-row button {
   margin-top: 8px;
   padding: 12px;
-  color: var(--text);
-  background: var(--panel2);
   border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
   border-radius: 10px;
 }
 
-.checkbox-row {
+.checkbox {
   display: flex;
+  gap: 8px;
   align-items: center;
-  gap: 9px;
   margin: 15px 0;
   font-size: 13px;
   color: var(--muted);
 }
 
-.checkbox-row input {
+.checkbox input {
   accent-color: var(--blue);
 }
 
-.dialog-actions {
+.actions {
   display: flex;
-  gap: 9px;
   flex-wrap: wrap;
-  margin-top: 18px;
+  gap: 8px;
+  margin-top: 16px;
 }
 
-.dialog-actions button {
+.actions button {
   flex: 1;
-  min-width: 90px;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--panel2);
+  min-width: 85px;
+  padding: 12px 8px;
+  background: var(--card);
   color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
 }
 
-.dialog-actions .primary {
+.actions .primary {
   background: var(--blue);
   border-color: var(--blue);
 }
 
-.dialog-actions .remove {
-  color: #ff7777;
+.actions .remove {
+  color: var(--red);
 }
 
-.key-error {
-  color: #ff8585 !important;
+#errorText {
   min-height: 18px;
-  font-size: 13px !important;
+  color: var(--red);
+  font-size: 13px;
 }
 
-@media (max-width: 480px) {
+@media(max-width: 480px) {
   .header {
     padding: 10px;
   }
@@ -426,18 +399,12 @@ button {
     font-size: 17px;
   }
 
-  .api-button {
+  .header button {
     padding: 9px;
-    font-size: 12px;
-  }
-
-  .messages {
-    padding: 16px 10px;
   }
 
   .bubble {
-    max-width: 84%;
-    font-size: 15px;
+    max-width: 85%;
   }
 
   .dialog {
@@ -448,6 +415,7 @@ button {
 </head>
 
 <body>
+
 <div class="app">
 
   <header class="header">
@@ -455,20 +423,20 @@ button {
 
     <div class="brand">
       <h1>JPT 1.0</h1>
-      <div class="status" id="statusText">● Ready to chat</div>
+      <div class="status" id="status">● Ready</div>
     </div>
 
-    <button class="api-button" id="apiButton" type="button">
-      Add API Key
-    </button>
+    <button id="keyButton" type="button">Add API Key</button>
   </header>
 
-  <main class="messages" id="messages" aria-live="polite">
+  <main class="messages" id="messages">
     <div class="welcome" id="welcome">
-      <div class="welcome-logo">J</div>
+      <div class="welcome-icon">J</div>
       <h2>Welcome to JPT 1.0</h2>
-      <p>Your AI assistant, built by Jaimin Barot.<br>
-      Add your Gemini API key to start chatting.</p>
+      <p>
+        Your AI assistant, created by Jaimin Barot.<br>
+        Connect your Groq API key to start chatting.
+      </p>
     </div>
   </main>
 
@@ -479,159 +447,151 @@ button {
         rows="1"
         maxlength="12000"
         placeholder="Message JPT..."
-        aria-label="Your message"
+        aria-label="Message"
       ></textarea>
 
-      <button class="send-button" id="sendButton" type="submit"
-        aria-label="Send message">➤</button>
+      <button id="sendButton" type="submit" aria-label="Send">➤</button>
     </form>
 
     <div class="footer">JPT 1.0 · Created by Jaimin Barot</div>
   </div>
+
 </div>
 
 <!-- API KEY DIALOG -->
-<div class="overlay" id="keyOverlay" role="dialog"
-  aria-modal="true" aria-labelledby="dialogTitle">
 
-  <div class="dialog">
-    <h2 id="dialogTitle">Connect Gemini API</h2>
+<div class="overlay" id="overlay">
+  <div class="dialog" role="dialog" aria-modal="true">
+
+    <h2>Connect Groq API</h2>
 
     <p>
-      Follow these steps to create your API key:
+      1. Open the official Groq Console.<br>
+      2. Create an API key.<br>
+      3. Copy it and paste it below.
     </p>
 
-    <ol>
-      <li>
-        Open
-        <a href="https://aistudio.google.com/app/apikey"
-          target="_blank" rel="noopener noreferrer">Google AI Studio</a>.
-      </li>
-      <li>Sign in and create an API key.</li>
-      <li>Copy the key and paste it below.</li>
-    </ol>
+    <p>
+      <a href="https://console.groq.com/keys"
+         target="_blank" rel="noopener noreferrer">
+        Open Groq API Keys
+      </a>
+    </p>
 
-    <label for="apiKeyInput">Gemini API key</label>
+    <label for="apiKeyInput">Groq API key</label>
 
-    <div class="key-input-wrap">
-      <input id="apiKeyInput" type="password"
-        placeholder="Paste your API key here"
-        autocomplete="off" spellcheck="false">
+    <div class="key-row">
+      <input
+        id="apiKeyInput"
+        type="password"
+        placeholder="Paste your Groq key"
+        autocomplete="off"
+        spellcheck="false"
+      >
 
-      <button class="show-button" id="showKeyButton"
-        type="button">Show</button>
+      <button type="button" id="showKey">Show</button>
     </div>
 
-    <label class="checkbox-row">
-      <input id="rememberKey" type="checkbox">
+    <label class="checkbox">
+      <input type="checkbox" id="rememberKey">
       Remember on this device
     </label>
 
-    <p class="key-error" id="keyError" role="alert"></p>
+    <p id="errorText" role="alert"></p>
 
-    <div class="dialog-actions">
-      <button type="button" id="cancelKeyButton">Cancel</button>
-      <button type="button" class="remove" id="removeKeyButton">
-        Remove key
-      </button>
-      <button type="button" class="primary" id="saveKeyButton">
-        Save key
-      </button>
+    <div class="actions">
+      <button type="button" id="cancelKey">Cancel</button>
+      <button type="button" class="remove" id="removeKey">Remove</button>
+      <button type="button" class="primary" id="saveKey">Save Key</button>
     </div>
 
     <p>
-      Your key is sent to Google's Gemini API to process your messages.
-      Only save it on a device you trust.
+      Security warning: a key used in browser JavaScript can be
+      discovered by anyone who can access the page. Do not publish
+      this version with your personal API key embedded in it.
     </p>
+
   </div>
 </div>
 
 <script>
 "use strict";
 
-/* =========================================================
-   JPT 1.0 CONFIGURATION
-   If Google reports "model not found", check the available
-   model names in Google AI Studio and change MODEL_NAME.
-========================================================= */
+/* ================= CONFIGURATION ================= */
 
-const MODEL_NAME = "gemini-3.8-flash";
-
+// Groq OpenAI-compatible Chat Completions API.
 const API_URL =
-  "https://generativelanguage.googleapis.com/v1beta/models/" +
-  MODEL_NAME +
-  ":generateContent";
+  "https://api.groq.com/openai/v1/chat/completions";
 
-const SYSTEM_INSTRUCTION =
-  "You are JPT 1.0, a helpful, intelligent AI assistant built by " +
-  "Jaimin Barot. Answer clearly, accurately and naturally. " +
-  "Use the conversation history to understand follow-up questions. " +
-  "If you are uncertain, say so instead of inventing facts. " +
-  "Format answers with readable paragraphs and lists when useful.";
+// Model shown in Groq's API documentation.
+// If unavailable for your account, choose an active model
+// from https://console.groq.com/docs/models
+const MODEL_NAME = "llama-3.3-70b-versatile";
 
-/* =========================================================
-   STATE
-========================================================= */
+const SYSTEM_PROMPT =
+  "You are JPT 1.0, an intelligent and helpful AI assistant " +
+  "created by Jaimin Barot. Answer accurately and clearly. " +
+  "Understand follow-up questions using conversation history. " +
+  "If you do not know something, be honest. " +
+  "Use readable paragraphs and lists when appropriate.";
+
+/* ================= STATE ================= */
 
 let apiKey = "";
-let conversation = [];
-let isSending = false;
-let activeController = null;
+let history = [];
+let busy = false;
+let controller = null;
 
-/* =========================================================
-   ELEMENTS
-========================================================= */
+/* ================= ELEMENTS ================= */
 
-const messagesEl = document.getElementById("messages");
-const welcomeEl = document.getElementById("welcome");
-const inputEl = document.getElementById("userInput");
-const formEl = document.getElementById("chatForm");
+const messages = document.getElementById("messages");
+const welcome = document.getElementById("welcome");
+const input = document.getElementById("userInput");
+const form = document.getElementById("chatForm");
 const sendButton = document.getElementById("sendButton");
-const apiButton = document.getElementById("apiButton");
-const statusText = document.getElementById("statusText");
+const keyButton = document.getElementById("keyButton");
+const status = document.getElementById("status");
 
-const overlay = document.getElementById("keyOverlay");
+const overlay = document.getElementById("overlay");
 const apiKeyInput = document.getElementById("apiKeyInput");
 const rememberKey = document.getElementById("rememberKey");
-const keyError = document.getElementById("keyError");
-const showKeyButton = document.getElementById("showKeyButton");
+const errorText = document.getElementById("errorText");
+const showKeyButton = document.getElementById("showKey");
 
-/* =========================================================
-   API KEY MANAGEMENT
-========================================================= */
+/* ================= API KEY ================= */
+
+function updateStatus() {
+  keyButton.textContent = apiKey ? "Change Key" : "Add API Key";
+
+  status.textContent = busy
+    ? "● Thinking..."
+    : apiKey
+      ? "● Groq connected"
+      : "● Basic mode";
+
+  status.style.color = busy ? "#8ab4ff" : apiKey ? "#55d99b" : "#9aa8bb";
+}
 
 function loadSavedKey() {
   try {
-    const saved = localStorage.getItem("jpt_gemini_api_key");
+    const saved = localStorage.getItem("jpt_groq_key");
 
     if (saved && saved.trim().length >= 20) {
       apiKey = saved.trim();
     }
   } catch (error) {
-    console.warn("Saved API key could not be read.");
+    console.warn("Local storage unavailable.");
   }
 
-  updateKeyUI();
-}
-
-function updateKeyUI() {
-  apiButton.textContent = apiKey ? "Change Key" : "Add API Key";
-
-  if (apiKey) {
-    statusText.textContent = "● API connected";
-    statusText.style.color = "#55d99b";
-  } else {
-    statusText.textContent = "● Basic mode";
-    statusText.style.color = "#9aa8bb";
-  }
+  updateStatus();
 }
 
 function openKeyDialog() {
-  keyError.textContent = "";
   apiKeyInput.value = apiKey;
   apiKeyInput.type = "password";
   showKeyButton.textContent = "Show";
   rememberKey.checked = false;
+  errorText.textContent = "";
   overlay.classList.add("open");
 
   setTimeout(() => apiKeyInput.focus(), 50);
@@ -639,76 +599,66 @@ function openKeyDialog() {
 
 function closeKeyDialog() {
   overlay.classList.remove("open");
-  keyError.textContent = "";
-  apiKeyInput.type = "password";
-  showKeyButton.textContent = "Show";
+  errorText.textContent = "";
 }
 
-function saveApiKey() {
+function saveKey() {
   const value = apiKeyInput.value.trim();
 
   if (value.length < 20 || /\s/.test(value)) {
-    keyError.textContent =
-      "Enter a valid API key (at least 20 characters, without spaces).";
+    errorText.textContent =
+      "Please enter a valid API key without spaces.";
     return;
   }
 
   apiKey = value;
 
-  if (rememberKey.checked) {
-    try {
-      localStorage.setItem("jpt_gemini_api_key", apiKey);
-    } catch (error) {
-      keyError.textContent =
-        "The key works for this session, but could not be saved on this device.";
+  try {
+    if (rememberKey.checked) {
+      localStorage.setItem("jpt_groq_key", apiKey);
+    } else {
+      localStorage.removeItem("jpt_groq_key");
     }
-  } else {
-    try {
-      localStorage.removeItem("jpt_gemini_api_key");
-    } catch (error) {
-      console.warn("Could not remove the previously saved key.");
-    }
+  } catch (error) {
+    errorText.textContent =
+      "Key is active for this session but could not be saved.";
   }
 
-  updateKeyUI();
+  updateStatus();
   closeKeyDialog();
-
-  addMessage(
-    "bot",
-    "API key configured. You can now ask me questions."
-  );
+  addMessage("bot", "Groq API key configured. Ask me anything!");
 }
 
-function removeApiKey() {
+function removeKey() {
   apiKey = "";
 
   try {
-    localStorage.removeItem("jpt_gemini_api_key");
+    localStorage.removeItem("jpt_groq_key");
   } catch (error) {
-    console.warn("Could not remove the saved key.");
+    console.warn("Could not clear saved key.");
   }
 
-  updateKeyUI();
+  updateStatus();
   closeKeyDialog();
-
-  addMessage("bot", "API key removed. Basic mode is now active.");
+  addMessage("bot", "Groq API key removed.");
 }
 
-apiButton.addEventListener("click", openKeyDialog);
+keyButton.addEventListener("click", openKeyDialog);
 
-document.getElementById("saveKeyButton")
-  .addEventListener("click", saveApiKey);
+document.getElementById("saveKey")
+  .addEventListener("click", saveKey);
 
-document.getElementById("cancelKeyButton")
+document.getElementById("cancelKey")
   .addEventListener("click", closeKeyDialog);
 
-document.getElementById("removeKeyButton")
-  .addEventListener("click", removeApiKey);
+document.getElementById("removeKey")
+  .addEventListener("click", removeKey);
 
 showKeyButton.addEventListener("click", () => {
-  const showing = apiKeyInput.type === "text";
-  apiKeyInput.type = showing ? "password" : "text";
-  showKeyButton.textContent = showing ? "Show" : "Hide";
+  const visible = apiKeyInput.type === "text";
+
+  apiKeyInput.type = visible ? "password" : "text";
+  showKeyButton.textContent = visible ? "Show" : "Hide";
 });
 
 overlay.addEventListener("click", event => {
@@ -719,17 +669,15 @@ document.addEventListener("keydown", event => {
   if (event.key === "Escape") closeKeyDialog();
 });
 
-/* =========================================================
-   CHAT UI
-========================================================= */
+/* ================= CHAT UI ================= */
 
-function scrollToBottom() {
-  messagesEl.scrollTop = messagesEl.scrollHeight;
+function scrollBottom() {
+  messages.scrollTop = messages.scrollHeight;
 }
 
 function addMessage(role, text) {
-  if (welcomeEl && welcomeEl.isConnected) {
-    welcomeEl.remove();
+  if (welcome && welcome.isConnected) {
+    welcome.remove();
   }
 
   const row = document.createElement("div");
@@ -742,22 +690,18 @@ function addMessage(role, text) {
   const bubble = document.createElement("div");
   bubble.className = "bubble";
 
-  // Render plain text safely; never insert API responses as HTML.
+  // Render as text to prevent model output being interpreted as HTML.
   bubble.textContent = String(text);
 
   row.appendChild(avatar);
   row.appendChild(bubble);
-  messagesEl.appendChild(row);
+  messages.appendChild(row);
 
-  scrollToBottom();
+  scrollBottom();
   return row;
 }
 
 function showTyping() {
-  if (welcomeEl && welcomeEl.isConnected) {
-    welcomeEl.remove();
-  }
-
   const row = document.createElement("div");
   row.className = "message bot";
   row.id = "typingIndicator";
@@ -771,168 +715,66 @@ function showTyping() {
 
   const dots = document.createElement("div");
   dots.className = "typing";
-  dots.innerHTML = "<span></span><span></span><span></span>";
+
+  for (let i = 0; i < 3; i++) {
+    dots.appendChild(document.createElement("span"));
+  }
 
   bubble.appendChild(dots);
   row.appendChild(avatar);
   row.appendChild(bubble);
-  messagesEl.appendChild(row);
+  messages.appendChild(row);
 
-  scrollToBottom();
+  scrollBottom();
 }
 
 function removeTyping() {
-  const typing = document.getElementById("typingIndicator");
-  if (typing) typing.remove();
+  document.getElementById("typingIndicator")?.remove();
 }
 
-function setBusy(value) {
-  isSending = value;
-  sendButton.disabled = value;
-  inputEl.disabled = value;
-  statusText.textContent = value ? "● Thinking..." :
-    (apiKey ? "● API connected" : "● Basic mode");
+/* ================= BASIC REPLIES ================= */
 
-  statusText.style.color = value ? "#8ab4ff" :
-    (apiKey ? "#55d99b" : "#9aa8bb");
-}
+function basicReply(text) {
+  const message = text.toLowerCase().trim();
 
-/* =========================================================
-   BASIC MODE REPLIES
-========================================================= */
-
-function basicReply(message) {
-  const text = message.toLowerCase().trim();
-
-  if (/^(hi|hello|hey|hello jpt|hi jpt)[!. ]*$/.test(text)) {
-    return "Hello! 👋 I'm JPT 1.0, created by Jaimin Barot. How can I help you?";
+  if (/^(hi|hello|hey)[!. ]*$/.test(message)) {
+    return "Hello! I'm JPT 1.0. How can I help you?";
   }
 
-  if (/^(thanks|thank you|thx|thankyou)[!. ]*$/.test(text)) {
-    return "You're welcome! 😊";
+  if (/^(thanks|thank you|thx)[!. ]*$/.test(message)) {
+    return "You're welcome!";
   }
 
-  if (/^(bye|goodbye|see you)[!. ]*$/.test(text)) {
-    return "Goodbye! 👋 Come back whenever you need help.";
+  if (/^(bye|goodbye)[!. ]*$/.test(message)) {
+    return "Goodbye! Come back whenever you need help.";
   }
 
-  if (/who (made|built|created) you|your creator|who is your developer/.test(text)) {
+  if (/who (made|built|created) you|your creator/.test(message)) {
     return "I am JPT 1.0, created by Jaimin Barot.";
   }
 
-  if (/who are you|what are you/.test(text)) {
-    return "I'm JPT 1.0, an AI chat assistant built by Jaimin Barot. Add a Gemini API key to enable AI-powered answers.";
+  if (/who are you|what are you/.test(message)) {
+    return "I'm JPT 1.0, an AI assistant created by Jaimin Barot.";
   }
 
   return null;
 }
 
-/* =========================================================
-   WORLD CLOCK
-========================================================= */
+/* ================= GROQ REQUEST ================= */
 
-const timeZones = [
-  { names: ["india", "indian", "gujarat", "ahmedabad", "vadodara",
-            "baroda", "mumbai", "delhi", "kolkata", "chennai"],
-    zone: "Asia/Kolkata", label: "India" },
+async function askGroq(userMessage) {
+  const requestController = new AbortController();
+  controller = requestController;
 
-  { names: ["usa", "us", "united states", "new york", "washington",
-            "los angeles", "chicago", "america"],
-    zone: "America/New_York", label: "USA (Eastern Time)" },
+  const timeout = setTimeout(() => {
+    requestController.abort();
+  }, 30000);
 
-  { names: ["uk", "united kingdom", "london", "england", "britain"],
-    zone: "Europe/London", label: "United Kingdom" },
-
-  { names: ["japan", "tokyo"],
-    zone: "Asia/Tokyo", label: "Japan" },
-
-  { names: ["australia", "sydney", "melbourne", "perth"],
-    zone: "Australia/Sydney", label: "Australia (Sydney)" },
-
-  { names: ["dubai", "uae", "united arab emirates"],
-    zone: "Asia/Dubai", label: "Dubai" },
-
-  { names: ["singapore"],
-    zone: "Asia/Singapore", label: "Singapore" },
-
-  { names: ["paris", "france"],
-    zone: "Europe/Paris", label: "France" },
-
-  { names: ["germany", "berlin"],
-    zone: "Europe/Berlin", label: "Germany" },
-
-  { names: ["nepal", "kathmandu"],
-    zone: "Asia/Kathmandu", label: "Nepal" },
-
-  { names: ["china", "beijing", "shanghai"],
-    zone: "Asia/Shanghai", label: "China" },
-
-  { names: ["saudi arabia", "riyadh"],
-    zone: "Asia/Riyadh", label: "Saudi Arabia" }
-];
-
-function getClockReply(message) {
-  const text = message.toLowerCase();
-
-  if (!/\b(time|clock|date|today)\b/.test(text)) {
-    return null;
-  }
-
-  let target = null;
-
-  for (const item of timeZones) {
-    if (item.names.some(name => text.includes(name))) {
-      target = item;
-      break;
-    }
-  }
-
-  const zone = target ? target.zone :
-    Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-  const label = target ? target.label : "Your device's local time";
-
-  try {
-    const now = new Date();
-
-    const time = new Intl.DateTimeFormat("en-US", {
-      timeZone: zone,
-      hour: "numeric",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true
-    }).format(now);
-
-    const date = new Intl.DateTimeFormat("en-US", {
-      timeZone: zone,
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric"
-    }).format(now);
-
-    return "🕒 " + label + "\nTime: " + time +
-      "\nDate: " + date + "\nTime zone: " + zone;
-  } catch (error) {
-    return "I couldn't determine that time zone. Try a city such as London, Tokyo, Dubai or Ahmedabad.";
-  }
-}
-
-/* =========================================================
-   GEMINI API
-========================================================= */
-
-async function askGemini(message) {
-  const controller = new AbortController();
-  activeController = controller;
-
-  const timeoutId = setTimeout(() => controller.abort(), 30000);
-
-  // Only successful turns are stored, so failed requests do not
-  // corrupt the conversation history.
-  const requestHistory = [
-    ...conversation,
-    { role: "user", parts: [{ text: message }] }
+  // Do not mutate saved history until the API succeeds.
+  const requestMessages = [
+    { role: "system", content: SYSTEM_PROMPT },
+    ...history,
+    { role: "user", content: userMessage }
   ];
 
   try {
@@ -940,20 +782,16 @@ async function askGemini(message) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-goog-api-key": apiKey
+        "Authorization": "Bearer " + apiKey
       },
       body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: SYSTEM_INSTRUCTION }]
-        },
-        contents: requestHistory,
-        generationConfig: {
-          temperature: 0.7,
-          topP: 0.95,
-          maxOutputTokens: 4096
-        }
+        model: MODEL_NAME,
+        messages: requestMessages,
+        temperature: 0.7,
+        max_tokens: 2048,
+        stream: false
       }),
-      signal: controller.signal
+      signal: requestController.signal
     });
 
     let data;
@@ -961,139 +799,115 @@ async function askGemini(message) {
     try {
       data = await response.json();
     } catch (error) {
-      throw new Error("Google returned an unreadable response. Please try again.");
+      throw new Error("Groq returned an invalid response.");
     }
 
     if (!response.ok) {
-      const apiMessage = data?.error?.message ||
+      const message =
+        data?.error?.message ||
+        data?.message ||
         ("HTTP " + response.status);
 
-      if (response.status === 400) {
-        throw new Error("Gemini rejected the request: " + apiMessage);
+      if (response.status === 401) {
+        throw new Error(
+          "Invalid API key. Check your Groq key and try again. " + message
+        );
       }
 
-      if (response.status === 401 || response.status === 403) {
+      if (response.status === 403) {
         throw new Error(
-          "API key rejected or permission denied. Check your key and API access. " +
-          apiMessage
+          "Access denied. Check your account or model permissions. " + message
         );
       }
 
       if (response.status === 404) {
         throw new Error(
-          "Gemini model not found: " + MODEL_NAME +
-          ". Check the model name supported by your API key in Google AI Studio."
+          "Model not found. Change MODEL_NAME to an active model in your Groq Console. " +
+          message
         );
       }
 
       if (response.status === 429) {
         throw new Error(
-          "Gemini rate limit or quota reached. Wait a moment and try again. " +
-          apiMessage
+          "Groq rate limit or quota reached. Wait and try again. " + message
         );
       }
 
-      throw new Error("Gemini API error: " + apiMessage);
+      throw new Error("Groq API error (" + response.status + "): " + message);
     }
 
-    if (data.promptFeedback?.blockReason) {
-      throw new Error(
-        "Google blocked this prompt: " + data.promptFeedback.blockReason
-      );
+    const answer =
+      data?.choices?.[0]?.message?.content;
+
+    if (typeof answer !== "string" || !answer.trim()) {
+      throw new Error("Groq returned an empty answer. Please try again.");
     }
 
-    const candidate = data.candidates?.[0];
+    // Save only successful user/assistant turns.
+    history.push(
+      { role: "user", content: userMessage },
+      { role: "assistant", content: answer }
+    );
 
-    if (!candidate) {
-      throw new Error("Gemini returned no answer. Please try rephrasing your message.");
-    }
-
-    const answer = (candidate.content?.parts || [])
-      .map(part => part.text || "")
-      .join("")
-      .trim();
-
-    if (!answer) {
-      throw new Error(
-        "Gemini returned an empty answer. Please try again with a different question."
-      );
-    }
-
-    // Store the user and model messages only after a successful response.
-    conversation = [
-      ...requestHistory,
-      { role: "model", parts: [{ text: answer }] }
-    ];
-
-    return answer;
+    return answer.trim();
 
   } catch (error) {
     if (error.name === "AbortError") {
       throw new Error(
-        "No response from Google after 30 seconds. Check your internet connection and try again."
+        "Groq did not respond within 30 seconds. Try again."
       );
     }
 
     if (error instanceof TypeError) {
       throw new Error(
-        "Could not connect to Gemini. Check your internet connection, browser permissions and API access, then try again."
+        "Could not connect to Groq. Check internet access or browser CORS restrictions."
       );
     }
 
     throw error;
 
   } finally {
-    clearTimeout(timeoutId);
+    clearTimeout(timeout);
 
-    if (activeController === controller) {
-      activeController = null;
+    if (controller === requestController) {
+      controller = null;
     }
   }
 }
 
-/* =========================================================
-   SEND MESSAGE
-========================================================= */
+/* ================= SEND MESSAGE ================= */
 
-async function sendMessage(rawMessage) {
-  const message = rawMessage.trim();
+async function sendMessage(rawText) {
+  const text = rawText.trim();
 
-  if (!message || isSending) return;
+  if (!text || busy) return;
 
-  addMessage("user", message);
+  addMessage("user", text);
 
-  inputEl.value = "";
+  input.value = "";
   resizeInput();
 
-  // Local clock works with or without an API key.
-  const clockReply = getClockReply(message);
-
-  if (clockReply) {
-    addMessage("bot", clockReply);
-    return;
-  }
-
-  // Basic responses work without an API key.
   if (!apiKey) {
-    const reply = basicReply(message);
+    const reply = basicReply(text);
 
-    if (reply) {
-      addMessage("bot", reply);
-    } else {
-      addMessage(
-        "bot",
-        "To answer that question, please tap “Add API Key” and connect your Gemini API key."
-      );
-    }
+    addMessage(
+      "bot",
+      reply || "Tap Add API Key and connect your Groq API key to use AI chat."
+    );
 
     return;
   }
 
-  setBusy(true);
+  busy = true;
+  sendButton.disabled = true;
+  input.disabled = true;
+
+  updateStatus();
   showTyping();
 
   try {
-    const answer = await askGemini(message);
+    const answer = await askGroq(text);
+
     removeTyping();
     addMessage("bot", answer);
 
@@ -1103,39 +917,44 @@ async function sendMessage(rawMessage) {
 
   } finally {
     removeTyping();
-    setBusy(false);
-    inputEl.focus();
+
+    busy = false;
+    sendButton.disabled = false;
+    input.disabled = false;
+
+    updateStatus();
+    input.focus();
   }
 }
 
-formEl.addEventListener("submit", event => {
+form.addEventListener("submit", event => {
   event.preventDefault();
-  sendMessage(inputEl.value);
+  sendMessage(input.value);
 });
 
-inputEl.addEventListener("keydown", event => {
+input.addEventListener("keydown", event => {
   if (event.key === "Enter" && !event.shiftKey) {
     event.preventDefault();
 
-    if (!isSending) {
-      sendMessage(inputEl.value);
+    if (!busy) {
+      sendMessage(input.value);
     }
   }
 });
 
 function resizeInput() {
-  inputEl.style.height = "auto";
-  inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + "px";
+  input.style.height = "auto";
+  input.style.height = Math.min(input.scrollHeight, 140) + "px";
 }
 
-inputEl.addEventListener("input", resizeInput);
+input.addEventListener("input", resizeInput);
 
-/* =========================================================
-   STARTUP
-========================================================= */
+/* ================= STARTUP ================= */
 
 loadSavedKey();
-inputEl.focus();
+input.focus();
+
 </script>
+
 </body>
 </html>
