@@ -3,661 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>JPT 1.0 — AI Assistant</title>
-
 <meta name="theme-color" content="#10101a">
 <meta name="description" content="JPT 1.0 AI Assistant created by Jaimin Barot">
-
+<title>JPT 1.0 — AI Assistant</title>
 <style>
-:root {
-    --bg: #10101a;
-    --panel: #181824;
-    --panel2: #222233;
-    --text: #f5f5ff;
-    --muted: #a3a3bd;
-    --accent: #8b5cf6;
-    --accent2: #6d45df;
-    --border: rgba(255,255,255,.09);
-    --danger: #ff6b6b;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont,
-                 "Segoe UI", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    height: 100dvh;
-    display: flex;
-    justify-content: center;
-    overflow: hidden;
-}
-
-button, textarea, input {
-    font: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-.app {
-    width: 100%;
-    max-width: 900px;
-    height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    background: var(--bg);
-}
-
-/* HEADER */
-
-.header {
-    min-height: 70px;
-    padding: 12px 17px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    border-bottom: 1px solid var(--border);
-    background: rgba(16,16,26,.97);
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    min-width: 0;
-}
-
-.logo {
-    width: 43px;
-    height: 43px;
-    border-radius: 15px;
-    display: grid;
-    place-items: center;
-    background: linear-gradient(135deg,#a78bfa,#6d28d9);
-    color: white;
-    font-size: 23px;
-    font-weight: 900;
-    flex-shrink: 0;
-    box-shadow: 0 5px 20px rgba(139,92,246,.25);
-}
-
-.brand-name {
-    font-size: 19px;
-    font-weight: 800;
-    letter-spacing: -.4px;
-}
-
-.brand-subtitle {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 2px;
-}
-
-.key-button {
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    color: white;
-    border-radius: 11px;
-    padding: 10px 12px;
-    font-size: 12px;
-    font-weight: 650;
-    white-space: nowrap;
-}
-
-/* CHAT */
-
-.chat {
-    flex: 1;
-    overflow-y: auto;
-    padding: 25px 17px 30px;
-    scroll-behavior: smooth;
-}
-
-.welcome {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 15px 0 45px;
-}
-
-.welcome-icon {
-    width: 76px;
-    height: 76px;
-    border-radius: 26px;
-    display: grid;
-    place-items: center;
-    background: linear-gradient(135deg,#8b5cf6,#4f46e5);
-    font-size: 36px;
-    margin-bottom: 20px;
-    box-shadow: 0 10px 35px rgba(139,92,246,.22);
-}
-
-.welcome h1 {
-    font-size: clamp(27px,6vw,39px);
-    letter-spacing: -1.3px;
-    margin: 0 0 10px;
-}
-
-.welcome p {
-    color: var(--muted);
-    font-size: 14px;
-    max-width: 350px;
-    line-height: 1.7;
-    margin: 0;
-}
-
-.suggestions {
-    width: 100%;
-    max-width: 550px;
-    display: grid;
-    grid-template-columns: repeat(2,minmax(0,1fr));
-    gap: 10px;
-    margin-top: 30px;
-}
-
-.suggestion {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 14px;
-    padding: 14px 12px;
-    text-align: left;
-    font-size: 13px;
-    line-height: 1.5;
-}
-
-.suggestion:hover {
-    border-color: var(--accent);
-}
-
-.message {
-    display: flex;
-    gap: 10px;
-    margin: 0 auto 23px;
-    max-width: 760px;
-    align-items: flex-start;
-}
-
-.message.user {
-    flex-direction: row-reverse;
-}
-
-.avatar {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
-    border-radius: 12px;
-    display: grid;
-    place-items: center;
-    background: var(--panel2);
-    font-size: 15px;
-    font-weight: 800;
-}
-
-.message.assistant .avatar {
-    background: linear-gradient(135deg,#8b5cf6,#6d28d9);
-}
-
-.bubble {
-    max-width: calc(100% - 45px);
-    padding: 12px 15px;
-    border: 1px solid var(--border);
-    border-radius: 4px 17px 17px 17px;
-    background: var(--panel);
-    font-size: 14px;
-    line-height: 1.75;
-    overflow-wrap: anywhere;
-    white-space: pre-wrap;
-}
-
-.message.user .bubble {
-    background: #49318d;
-    border-color: rgba(167,139,250,.25);
-    border-radius: 17px 4px 17px 17px;
-}
-
-.message.error .bubble {
-    border-color: rgba(255,107,107,.45);
-    color: #ffb6b6;
-}
-
-.typing {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-    padding: 5px 2px;
-}
-
-.typing span {
-    width: 7px;
-    height: 7px;
-    background: #b8a4ff;
-    border-radius: 50%;
-    animation: bounce .8s infinite alternate;
-}
-
-.typing span:nth-child(2) {
-    animation-delay: .15s;
-}
-
-.typing span:nth-child(3) {
-    animation-delay: .3s;
-}
-
-@keyframes bounce {
-    from { transform: translateY(0); opacity: .45; }
-    to { transform: translateY(-5px); opacity: 1; }
-}
-
-/* INPUT */
-
-.composer-area {
-    padding: 12px 15px max(12px, env(safe-area-inset-bottom));
-    border-top: 1px solid var(--border);
-    background: var(--bg);
-}
-
-.composer {
-    max-width: 760px;
-    margin: auto;
-    display: flex;
-    align-items: flex-end;
-    gap: 10px;
-    padding: 9px;
-    background: var(--panel);
-    border: 1px solid rgba(167,139,250,.22);
-    border-radius: 18px;
-}
-
-.composer:focus-within {
-    border-color: var(--accent);
-}
-
-#prompt {
-    flex: 1;
-    width: 100%;
-    max-height: 150px;
-    min-height: 42px;
-    resize: none;
-    border: 0;
-    outline: 0;
-    color: var(--text);
-    background: transparent;
-    padding: 10px 7px;
-    line-height: 1.5;
-    font-size: 14px;
-}
-
-#prompt::placeholder {
-    color: #85859f;
-}
-
-#sendButton {
-    width: 43px;
-    height: 43px;
-    min-width: 43px;
-    border: 0;
-    border-radius: 13px;
-    background: linear-gradient(135deg,#a78bfa,#7c3aed);
-    color: white;
-    font-size: 19px;
-    font-weight: 800;
-}
-
-#sendButton:disabled {
-    opacity: .45;
-    cursor: not-allowed;
-}
-
-.footer-note {
-    max-width: 760px;
-    margin: 9px auto 0;
-    text-align: center;
-    color: #77778f;
-    font-size: 10px;
-    line-height: 1.5;
-}
-
-/* API KEY MODAL */
-
-.modal {
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 18px;
-    background: rgba(0,0,0,.72);
-    backdrop-filter: blur(7px);
-}
-
-.modal.open {
-    display: flex;
-}
-
-.modal-card {
-    width: 100%;
-    max-width: 430px;
-    background: #1b1b2b;
-    border: 1px solid var(--border);
-    border-radius: 22px;
-    padding: 23px;
-    box-shadow: 0 20px 70px rgba(0,0,0,.4);
-}
-
-.modal-card h2 {
-    margin: 0 0 9px;
-    font-size: 22px;
-}
-
-.modal-card p {
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.7;
-}
-
-.modal-card label {
-    display: block;
-    margin: 17px 0 8px;
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.key-input {
-    width: 100%;
-    background: #10101a;
-    color: white;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 13px;
-    outline: none;
-    font-size: 13px;
-}
-
-.key-input:focus {
-    border-color: var(--accent);
-}
-
-.remember-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 13px;
-}
-
-.remember-row input {
-    accent-color: var(--accent);
-}
-
-.modal-actions {
-    display: flex;
-    gap: 9px;
-    margin-top: 21px;
-}
-
-.modal-actions button {
-    flex: 1;
-    padding: 12px;
-    border-radius: 11px;
-    border: 1px solid var(--border);
-    font-weight: 700;
-    font-size: 13px;
-}
-
-.save-button {
-    background: var(--accent);
-    color: white;
-}
-
-.cancel-button {
-    background: var(--panel2);
-    color: white;
-}
-
-.remove-button {
-    background: transparent;
-    color: var(--danger);
-    border: 0;
-    margin-top: 14px;
-    padding: 8px 0;
-    font-size: 12px;
-}
-
-.status {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 5px 9px;
-    border-radius: 20px;
-    background: rgba(139,92,246,.14);
-    color: #c4b5fd;
-    font-size: 11px;
-}
-
-@media (min-width: 700px) {
-    .chat {
-        padding-left: 28px;
-        padding-right: 28px;
-    }
-
-    .header {
-        padding-left: 24px;
-        padding-right: 24px;
-    }
-}
-
-@media (max-width: 380px) {
-    .brand-name {
-        font-size: 17px;
-    }
-
-    .key-button {
-        padding: 9px;
-        font-size: 11px;
-    }
-
-    .suggestion {
-        padding: 11px 9px;
-        font-size: 12px;
-    }
-}
+:root{--bg:#10101a;--panel:#181824;--panel2:#222233;--text:#f5f5ff;--muted:#a3a3bd;--accent:#8b5cf6;--border:rgba(255,255,255,.09);--danger:#ff8585}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);height:100dvh;display:flex;justify-content:center;overflow:hidden}
+button,textarea,input{font:inherit}button{cursor:pointer}
+.app{width:100%;max-width:900px;height:100dvh;display:flex;flex-direction:column;background:var(--bg)}
+.header{min-height:70px;padding:12px 17px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border);background:var(--bg)}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.logo{width:43px;height:43px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#a78bfa,#6d28d9);color:#fff;font-size:23px;font-weight:900;flex-shrink:0}
+.brand-name{font-size:19px;font-weight:800;letter-spacing:-.4px}.brand-subtitle{font-size:11px;color:var(--muted);margin-top:2px}
+.key-button{background:var(--panel2);border:1px solid var(--border);color:#fff;border-radius:11px;padding:10px 12px;font-size:12px;font-weight:650;white-space:nowrap}
+.chat{flex:1;overflow-y:auto;padding:25px 17px 30px;scroll-behavior:smooth}
+.welcome{min-height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:15px 0 45px}
+.welcome-icon{width:76px;height:76px;border-radius:26px;display:grid;place-items:center;background:linear-gradient(135deg,#8b5cf6,#4f46e5);font-size:36px;margin-bottom:20px}
+.welcome h1{font-size:clamp(27px,6vw,39px);letter-spacing:-1.3px;margin:0 0 10px}
+.welcome p{color:var(--muted);font-size:14px;max-width:350px;line-height:1.7;margin:0}
+.suggestions{width:100%;max-width:550px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:30px}
+.suggestion{background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:14px;padding:14px 12px;text-align:left;font-size:13px;line-height:1.5}
+.suggestion:hover{border-color:var(--accent)}
+.message{display:flex;gap:10px;margin:0 auto 23px;max-width:760px;align-items:flex-start}
+.message.user{flex-direction:row-reverse}
+.avatar{width:34px;height:34px;min-width:34px;border-radius:12px;display:grid;place-items:center;background:var(--panel2);font-size:15px;font-weight:800}
+.message.assistant .avatar{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
+.bubble{max-width:calc(100% - 45px);padding:12px 15px;border:1px solid var(--border);border-radius:4px 17px 17px 17px;background:var(--panel);font-size:14px;line-height:1.75;overflow-wrap:anywhere;white-space:pre-wrap}
+.message.user .bubble{background:#49318d;border-color:rgba(167,139,250,.25);border-radius:17px 4px 17px 17px}
+.message.error .bubble{border-color:rgba(255,107,107,.45);color:#ffb6b6}
+.typing{display:flex;gap:5px;align-items:center;padding:5px 2px}
+.typing span{width:7px;height:7px;background:#b8a4ff;border-radius:50%;animation:bounce .8s infinite alternate}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{from{transform:translateY(0);opacity:.45}to{transform:translateY(-5px);opacity:1}}
+.composer-area{padding:12px 15px max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--border);background:var(--bg)}
+.composer{max-width:760px;margin:auto;display:flex;align-items:flex-end;gap:10px;padding:9px;background:var(--panel);border:1px solid rgba(167,139,250,.22);border-radius:18px}
+.composer:focus-within{border-color:var(--accent)}
+#prompt{flex:1;width:100%;max-height:150px;min-height:42px;resize:none;border:0;outline:0;color:var(--text);background:transparent;padding:10px 7px;line-height:1.5;font-size:14px}
+#prompt::placeholder{color:#85859f}
+#sendButton{width:43px;height:43px;min-width:43px;border:0;border-radius:13px;background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;font-size:19px;font-weight:800}
+#sendButton:disabled{opacity:.45;cursor:not-allowed}
+.footer-note{max-width:760px;margin:9px auto 0;text-align:center;color:#77778f;font-size:10px;line-height:1.5}
+.modal{position:fixed;inset:0;z-index:10;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.72);backdrop-filter:blur(7px)}
+.modal.open{display:flex}
+.modal-card{width:100%;max-width:430px;background:#1b1b2b;border:1px solid var(--border);border-radius:22px;padding:23px;box-shadow:0 20px 70px rgba(0,0,0,.4)}
+.modal-card h2{margin:0 0 9px;font-size:22px}.modal-card p{color:var(--muted);font-size:13px;line-height:1.7}
+.modal-card label{display:block;margin:17px 0 8px;font-size:12px;font-weight:700}
+.key-input{width:100%;background:#10101a;color:#fff;border:1px solid var(--border);border-radius:12px;padding:13px;outline:none;font-size:13px}
+.key-input:focus{border-color:var(--accent)}
+.remember-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:13px}
+.remember-row input{accent-color:var(--accent)}
+.modal-actions{display:flex;gap:9px;margin-top:21px}
+.modal-actions button{flex:1;padding:12px;border-radius:11px;border:1px solid var(--border);font-weight:700;font-size:13px}
+.save-button{background:var(--accent);color:#fff}.cancel-button{background:var(--panel2);color:#fff}
+.remove-button{background:transparent;color:var(--danger);border:0;margin-top:14px;padding:8px 0;font-size:12px}
+.status{display:inline-block;margin-top:10px;padding:5px 9px;border-radius:20px;background:rgba(139,92,246,.14);color:#c4b5fd;font-size:11px}
+@media(min-width:700px){.chat{padding-left:28px;padding-right:28px}.header{padding-left:24px;padding-right:24px}}
+@media(max-width:380px){.brand-name{font-size:17px}.key-button{padding:9px;font-size:11px}.suggestion{padding:11px 9px;font-size:12px}}
 </style>
 </head>
-
 <body>
-
 <div class="app">
-
-    <header class="header">
-        <div class="brand">
-            <div class="logo">J</div>
-            <div>
-                <div class="brand-name">JPT 1.0</div>
-                <div class="brand-subtitle">Created by Jaimin Barot</div>
-            </div>
-        </div>
-
-        <button class="key-button" id="keyButton">
-            ⚙ API Settings
-        </button>
-    </header>
-
-    <main class="chat" id="chat">
-
-        <section class="welcome" id="welcome">
-            <div class="welcome-icon">✦</div>
-
-            <h1>Hey, I'm JPT.</h1>
-
-            <p>
-                Your AI assistant. Ask questions, learn new things,
-                write code, or explore your ideas.
-            </p>
-
-            <div class="suggestions">
-                <button class="suggestion"
-                    data-prompt="Explain artificial intelligence in simple words.">
-                    ✨ Explain AI simply
-                </button>
-
-                <button class="suggestion"
-                    data-prompt="Give me five creative business ideas.">
-                    💡 Business ideas
-                </button>
-
-                <button class="suggestion"
-                    data-prompt="Create a modern responsive HTML website.">
-                    💻 Write website code
-                </button>
-
-                <button class="suggestion"
-                    data-prompt="Help me make a productive daily schedule.">
-                    📅 Plan my day
-                </button>
-            </div>
-        </section>
-
-        <div id="messages"></div>
-
-    </main>
-
-    <footer class="composer-area">
-        <form class="composer" id="chatForm">
-            <textarea
-                id="prompt"
-                placeholder="Message JPT..."
-                rows="1"
-                aria-label="Your message"
-                autocomplete="off"
-            ></textarea>
-
-            <button type="submit" id="sendButton"
-                aria-label="Send message">↑</button>
-        </form>
-
-        <div class="footer-note">
-            JPT can make mistakes. Verify important information.
-            <br>
-            Powered by Groq · Created by Jaimin Barot
-        </div>
-    </footer>
-
+  <header class="header">
+    <div class="brand"><div class="logo">J</div><div><div class="brand-name">JPT 1.0</div><div class="brand-subtitle">Created by Jaimin Barot</div></div></div>
+    <button class="key-button" id="keyButton" type="button">⚙ Add API Key</button>
+  </header>
+  <main class="chat" id="chat">
+    <section class="welcome" id="welcome">
+      <div class="welcome-icon">✦</div><h1>Hey, I'm JPT.</h1>
+      <p>Your AI assistant. Ask questions, learn new things, write code, or explore your ideas.</p>
+      <div class="suggestions">
+        <button class="suggestion" data-prompt="Explain artificial intelligence in simple words." type="button">✨ Explain AI simply</button>
+        <button class="suggestion" data-prompt="Give me five creative business ideas." type="button">💡 Business ideas</button>
+        <button class="suggestion" data-prompt="Create a modern responsive HTML website." type="button">💻 Write website code</button>
+        <button class="suggestion" data-prompt="Help me make a productive daily schedule." type="button">📅 Plan my day</button>
+      </div>
+    </section>
+    <div id="messages"></div>
+  </main>
+  <footer class="composer-area">
+    <form class="composer" id="chatForm">
+      <textarea id="prompt" placeholder="Message JPT..." rows="1" aria-label="Your message" autocomplete="off"></textarea>
+      <button type="submit" id="sendButton" aria-label="Send message">↑</button>
+    </form>
+    <div class="footer-note">JPT can make mistakes. Verify important information.<br>Powered by Groq · Created by Jaimin Barot</div>
+  </footer>
 </div>
 
-<!-- API KEY SETTINGS -->
-
-<div class="modal" id="apiModal">
-    <div class="modal-card">
-
-        <h2>⚙ API Settings</h2>
-
-        <p>
-            Connect your Groq API key to enable AI responses.
-            Get a key from the official Groq Console.
-        </p>
-
-        <a
-            href="https://console.groq.com/keys"
-            target="_blank"
-            rel="noopener noreferrer"
-            style="color:#bba5ff;font-size:13px;"
-        >
-            Open Groq Console ↗
-        </a>
-
-        <label for="apiKeyInput">Groq API Key</label>
-
-        <input
-            id="apiKeyInput"
-            class="key-input"
-            type="password"
-            placeholder="Paste your Groq API key"
-            autocomplete="off"
-            spellcheck="false"
-        >
-
-        <div class="remember-row">
-            <input type="checkbox" id="showKey">
-            <label for="showKey" style="margin:0;font-weight:400;">
-                Show API key
-            </label>
-        </div>
-
-        <div class="remember-row">
-            <input type="checkbox" id="rememberKey">
-            <label for="rememberKey" style="margin:0;font-weight:400;">
-                Save key in this browser
-            </label>
-        </div>
-
-        <div class="status" id="keyStatus">API key not connected</div>
-
-        <div class="modal-actions">
-            <button class="cancel-button" id="cancelModal"
-                type="button">Cancel</button>
-
-            <button class="save-button" id="saveKey"
-                type="button">Connect Key</button>
-        </div>
-
-        <button class="remove-button" id="removeKey" type="button">
-            Remove saved API key
-        </button>
-
-        <p style="font-size:11px;margin-bottom:0;">
-            Security: browser storage is not secure against someone
-            who can access your device. Never publish an HTML file
-            containing your API key.
-        </p>
-
-    </div>
+<div class="modal" id="apiModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <h2 id="modalTitle">⚙ API Settings</h2>
+    <p>Connect your Groq API key to enable AI responses. Create a key in the official Groq Console.</p>
+    <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" style="color:#bba5ff;font-size:13px">Open Groq Console ↗</a>
+    <label for="apiKeyInput">Groq API Key</label>
+    <input id="apiKeyInput" class="key-input" type="password" placeholder="Paste your Groq API key" autocomplete="off" spellcheck="false">
+    <div class="remember-row"><input type="checkbox" id="showKey"><label for="showKey" style="margin:0;font-weight:400">Show API key</label></div>
+    <div class="remember-row"><input type="checkbox" id="rememberKey"><label for="rememberKey" style="margin:0;font-weight:400">Save key in this browser</label></div>
+    <div class="status" id="keyStatus">API key not connected</div>
+    <div class="modal-actions"><button class="cancel-button" id="cancelModal" type="button">Cancel</button><button class="save-button" id="saveKey" type="button">Connect Key</button></div>
+    <button class="remove-button" id="removeKey" type="button">Remove saved API key</button>
+    <p style="font-size:11px;margin-bottom:0">Security: browser storage is not secure against someone who can access your device. Do not publish this HTML with your API key. For a public site, use a secure backend.</p>
+  </div>
 </div>
 
 <script>
 "use strict";
 
-/* =========================================
-   JPT 1.0 CONFIGURATION
-========================================= */
-
-const API_URL =
-    "https://api.groq.com/openai/v1/chat/completions";
-
-/* FIXED MODEL ID */
+const API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL_NAME = "openai/gpt-oss-120b";
-
 const STORAGE_KEY = "jpt_groq_key";
-
-const SYSTEM_PROMPT = `
-You are JPT, a helpful AI assistant created by Jaimin Barot.
-
-Instructions:
-- Be helpful, accurate, and friendly.
-- Respond in the language the user uses.
-- If the user uses Hindi or Hinglish, you may reply in Hinglish.
-- Explain technical problems in simple steps.
-- For coding requests, provide complete and usable code when appropriate.
-- Never claim to have performed an action you did not perform.
-- If you do not know something, say so clearly.
-- Format responses clearly and use examples when useful.
-`;
-
-/* =========================================
-   ELEMENTS
-========================================= */
+const SYSTEM_PROMPT = `You are JPT, a helpful AI assistant created by Jaimin Barot.
+Be accurate, friendly, and concise. Reply in the language the user uses. If the user uses Hindi or Hinglish, reply naturally in Hindi/Hinglish. Explain technical problems simply. For coding requests, provide complete usable code when appropriate. Never claim to have done something you have not done.`;
 
 const chat = document.getElementById("chat");
 const messagesElement = document.getElementById("messages");
@@ -665,496 +121,230 @@ const welcome = document.getElementById("welcome");
 const promptInput = document.getElementById("prompt");
 const chatForm = document.getElementById("chatForm");
 const sendButton = document.getElementById("sendButton");
-
 const apiModal = document.getElementById("apiModal");
 const apiKeyInput = document.getElementById("apiKeyInput");
 const showKey = document.getElementById("showKey");
 const rememberKey = document.getElementById("rememberKey");
 const keyStatus = document.getElementById("keyStatus");
-
 const keyButton = document.getElementById("keyButton");
-const saveKeyButton = document.getElementById("saveKey");
-const cancelModalButton = document.getElementById("cancelModal");
-const removeKeyButton = document.getElementById("removeKey");
-
-/* =========================================
-   STATE
-========================================= */
 
 let apiKey = "";
 let isLoading = false;
-let requestController = null;
-
-/*
-  Only recent messages are kept in memory to prevent
-  requests from becoming excessively large.
-*/
 let history = [];
-
 const MAX_HISTORY_MESSAGES = 20;
 
-/* =========================================
-   API KEY MANAGEMENT
-========================================= */
-
 function loadSavedKey() {
-    try {
-        apiKey = localStorage.getItem(STORAGE_KEY) || "";
-    } catch (error) {
-        apiKey = "";
-    }
-
-    updateKeyStatus();
+  try { apiKey = localStorage.getItem(STORAGE_KEY) || ""; }
+  catch (_) { apiKey = ""; }
+  updateKeyStatus();
 }
-
 function updateKeyStatus() {
-    if (apiKey) {
-        keyStatus.textContent = "✓ API key connected";
-        keyButton.textContent = "⚙ API Connected";
-    } else {
-        keyStatus.textContent = "API key not connected";
-        keyButton.textContent = "⚙ Add API Key";
-    }
+  keyStatus.textContent = apiKey ? "✓ API key connected" : "API key not connected";
+  keyButton.textContent = apiKey ? "⚙ API Connected" : "⚙ Add API Key";
 }
-
 function openApiModal() {
-    apiKeyInput.value = apiKey;
-    rememberKey.checked = Boolean(
-        localStorage.getItem(STORAGE_KEY)
-    );
-    showKey.checked = false;
-    apiKeyInput.type = "password";
-
-    updateKeyStatus();
-
-    apiModal.classList.add("open");
-    setTimeout(() => apiKeyInput.focus(), 100);
+  apiKeyInput.value = apiKey;
+  try { rememberKey.checked = Boolean(localStorage.getItem(STORAGE_KEY)); }
+  catch (_) { rememberKey.checked = false; }
+  showKey.checked = false;
+  apiKeyInput.type = "password";
+  updateKeyStatus();
+  apiModal.classList.add("open");
+  setTimeout(() => apiKeyInput.focus(), 80);
 }
-
-function closeApiModal() {
-    apiModal.classList.remove("open");
-}
+function closeApiModal() { apiModal.classList.remove("open"); }
 
 keyButton.addEventListener("click", openApiModal);
+document.getElementById("cancelModal").addEventListener("click", closeApiModal);
+apiModal.addEventListener("click", e => { if (e.target === apiModal) closeApiModal(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeApiModal(); });
+showKey.addEventListener("change", () => { apiKeyInput.type = showKey.checked ? "text" : "password"; });
 
-cancelModalButton.addEventListener("click", closeApiModal);
-
-apiModal.addEventListener("click", function(event) {
-    if (event.target === apiModal) {
-        closeApiModal();
-    }
+document.getElementById("saveKey").addEventListener("click", () => {
+  const enteredKey = apiKeyInput.value.trim();
+  if (!enteredKey) { alert("Please paste your Groq API key first."); apiKeyInput.focus(); return; }
+  apiKey = enteredKey;
+  try {
+    if (rememberKey.checked) localStorage.setItem(STORAGE_KEY, apiKey);
+    else localStorage.removeItem(STORAGE_KEY);
+  } catch (_) {
+    alert("Browser storage is unavailable. The key will only remain in memory until the page reloads.");
+  }
+  updateKeyStatus();
+  closeApiModal();
+  addMessage("assistant", "API key added. Send me a message to test the connection.");
 });
-
-showKey.addEventListener("change", function() {
-    apiKeyInput.type = showKey.checked ? "text" : "password";
+document.getElementById("removeKey").addEventListener("click", () => {
+  apiKey = "";
+  try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+  apiKeyInput.value = "";
+  updateKeyStatus();
+  alert("The API key has been removed from this page.");
 });
-
-saveKeyButton.addEventListener("click", function() {
-    const enteredKey = apiKeyInput.value.trim();
-
-    if (!enteredKey) {
-        alert("Please paste your Groq API key first.");
-        apiKeyInput.focus();
-        return;
-    }
-
-    apiKey = enteredKey;
-
-    try {
-        if (rememberKey.checked) {
-            localStorage.setItem(STORAGE_KEY, apiKey);
-        } else {
-            localStorage.removeItem(STORAGE_KEY);
-        }
-    } catch (error) {
-        alert(
-            "Browser storage is unavailable. Your key will only " +
-            "remain in memory until you reload this page."
-        );
-    }
-
-    updateKeyStatus();
-    closeApiModal();
-
-    addMessage(
-        "assistant",
-        "API key added. Send me a message to test the connection."
-    );
-});
-
-removeKeyButton.addEventListener("click", function() {
-    apiKey = "";
-
-    try {
-        localStorage.removeItem(STORAGE_KEY);
-    } catch (error) {
-        // Storage may be unavailable.
-    }
-
-    apiKeyInput.value = "";
-    updateKeyStatus();
-
-    alert("The API key has been removed from this page.");
-});
-
-/* =========================================
-   CHAT UI
-========================================= */
 
 function scrollToBottom() {
-    requestAnimationFrame(() => {
-        chat.scrollTop = chat.scrollHeight;
-    });
+  requestAnimationFrame(() => { chat.scrollTop = chat.scrollHeight; });
 }
-
-function hideWelcome() {
-    if (welcome) {
-        welcome.style.display = "none";
-    }
-}
+function hideWelcome() { welcome.style.display = "none"; }
 
 function addMessage(role, content, isError = false) {
-    hideWelcome();
-
-    const row = document.createElement("div");
-    row.className =
-        "message " + role + (isError ? " error" : "");
-
-    const avatar = document.createElement("div");
-    avatar.className = "avatar";
-    avatar.textContent = role === "user" ? "Y" : "J";
-
-    const bubble = document.createElement("div");
-    bubble.className = "bubble";
-
-    /*
-      textContent prevents API replies from being treated as HTML.
-    */
-    bubble.textContent = content;
-
-    row.appendChild(avatar);
-    row.appendChild(bubble);
-
-    messagesElement.appendChild(row);
-
-    scrollToBottom();
-
-    return row;
+  hideWelcome();
+  const row = document.createElement("div");
+  row.className = "message " + role + (isError ? " error" : "");
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.textContent = role === "user" ? "Y" : "J";
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.textContent = content;
+  row.append(avatar, bubble);
+  messagesElement.appendChild(row);
+  scrollToBottom();
+  return row;
 }
-
 function showTyping() {
-    hideWelcome();
-
-    const row = document.createElement("div");
-    row.className = "message assistant";
-    row.id = "typingIndicator";
-
-    const avatar = document.createElement("div");
-    avatar.className = "avatar";
-    avatar.textContent = "J";
-
-    const bubble = document.createElement("div");
-    bubble.className = "bubble";
-
-    const typing = document.createElement("div");
-    typing.className = "typing";
-    typing.setAttribute("aria-label", "JPT is thinking");
-
-    for (let i = 0; i < 3; i++) {
-        typing.appendChild(document.createElement("span"));
-    }
-
-    bubble.appendChild(typing);
-    row.appendChild(avatar);
-    row.appendChild(bubble);
-
-    messagesElement.appendChild(row);
-
-    scrollToBottom();
+  hideWelcome();
+  const row = document.createElement("div");
+  row.className = "message assistant";
+  row.id = "typingIndicator";
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.textContent = "J";
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  const typing = document.createElement("div");
+  typing.className = "typing";
+  typing.setAttribute("aria-label", "JPT is thinking");
+  for (let i = 0; i < 3; i++) typing.appendChild(document.createElement("span"));
+  bubble.appendChild(typing);
+  row.append(avatar, bubble);
+  messagesElement.appendChild(row);
+  scrollToBottom();
 }
-
 function removeTyping() {
-    const indicator = document.getElementById("typingIndicator");
-
-    if (indicator) {
-        indicator.remove();
-    }
+  const indicator = document.getElementById("typingIndicator");
+  if (indicator) indicator.remove();
 }
-
-/* =========================================
-   ERROR HANDLING
-========================================= */
-
-function friendlyError(status, apiMessage) {
-    const message = String(apiMessage || "");
-
-    if (status === 400) {
-        return "Groq rejected the request (400). Check the model ID " +
-            "and request settings.\n\nDetails: " + message;
-    }
-
-    if (status === 401) {
-        return "Your Groq API key is invalid or incorrect. Open API " +
-            "Settings and enter a valid key.\n\nDetails: " + message;
-    }
-
-    if (status === 403) {
-        return "Access denied. Check your Groq account, API key " +
-            "permissions, and model access.\n\nDetails: " + message;
-    }
-
-    if (status === 404) {
-        return "The API endpoint or model was not found. The current " +
-            "configured model is " + MODEL_NAME +
-            ". Check Groq's supported models.\n\nDetails: " + message;
-    }
-
-    if (status === 429) {
-        return "Groq rate limit or quota reached. Wait a little and " +
-            "try again. Check your account limits.\n\nDetails: " + message;
-    }
-
-    if (status >= 500) {
-        return "Groq's server returned an error. Try again shortly." +
-            "\n\nDetails: " + message;
-    }
-
-    return "Request failed" +
-        (status ? " (" + status + ")" : "") +
-        ".\n\nDetails: " + (message || "Unknown error");
+function friendlyError(status, detail) {
+  const d = String(detail || "Unknown error");
+  if (status === 400) return "Groq rejected the request (400). Check the request parameters.\n\nDetails: " + d;
+  if (status === 401) return "Your Groq API key is invalid. Open API Settings and enter a valid key.\n\nDetails: " + d;
+  if (status === 403) return "Access denied. Check your Groq account, key permissions, and model access.\n\nDetails: " + d;
+  if (status === 404) return "Model or endpoint not found. The configured model is " + MODEL_NAME + ".\n\nDetails: " + d;
+  if (status === 429) return "Groq rate limit or quota reached. Wait and try again, or check your account limits.\n\nDetails: " + d;
+  if (status >= 500) return "Groq server error. Please try again shortly.\n\nDetails: " + d;
+  return "Request failed" + (status ? " (" + status + ")" : "") + ".\n\nDetails: " + d;
 }
-
-/* =========================================
-   GROQ API REQUEST
-========================================= */
 
 async function getAIResponse(userText) {
-    if (!apiKey) {
-        throw new Error(
-            "No API key connected. Open API Settings and add your Groq key."
-        );
+  if (!apiKey) throw new Error("No API key connected. Open API Settings and add your Groq key.");
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 60000);
+  const requestMessages = [
+    { role: "system", content: SYSTEM_PROMPT },
+    ...history,
+    { role: "user", content: userText }
+  ];
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + apiKey
+      },
+      body: JSON.stringify({
+        model: MODEL_NAME,
+        messages: requestMessages,
+        temperature: 0.6,
+        max_completion_tokens: 2048,
+        top_p: 0.95,
+        reasoning_effort: "medium",
+        include_reasoning: false,
+        stream: false
+      }),
+      signal: controller.signal
+    });
+
+    const rawText = await response.text();
+    let data;
+    try { data = JSON.parse(rawText); } catch (_) { data = {}; }
+
+    if (!response.ok) {
+      throw new Error(friendlyError(response.status, data.error?.message || rawText));
     }
-
-    /*
-      Build a new request with the system prompt and recent history.
-    */
-    const requestMessages = [
-        {
-            role: "system",
-            content: SYSTEM_PROMPT
-        },
-        ...history,
-        {
-            role: "user",
-            content: userText
-        }
-    ];
-
-    requestController = new AbortController();
-
-    const timeout = setTimeout(() => {
-        if (requestController) {
-            requestController.abort();
-        }
-    }, 60000);
-
-    try {
-        const response = await fetch(API_URL, {
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + apiKey
-            },
-
-            body: JSON.stringify({
-                model: MODEL_NAME,
-                messages: requestMessages,
-                temperature: 0.7,
-                max_tokens: 2048,
-                stream: false
-            }),
-
-            signal: requestController.signal
-        });
-
-        const rawText = await response.text();
-
-        let data;
-
-        try {
-            data = JSON.parse(rawText);
-        } catch (error) {
-            data = {};
-        }
-
-        if (!response.ok) {
-            throw new Error(
-                friendlyError(
-                    response.status,
-                    data.error?.message || rawText
-                )
-            );
-        }
-
-        const answer =
-            data.choices?.[0]?.message?.content;
-
-        if (typeof answer !== "string" || !answer.trim()) {
-            throw new Error(
-                "The API returned no text. Please try again."
-            );
-        }
-
-        return answer.trim();
-
-    } catch (error) {
-        if (error.name === "AbortError") {
-            throw new Error(
-                "The request took too long and timed out. " +
-                "Check your internet connection and try again."
-            );
-        }
-
-        if (error instanceof TypeError) {
-            throw new Error(
-                "Could not connect to Groq. Check your internet " +
-                "connection. If the browser reports CORS or a network " +
-                "error, try another browser or connection."
-            );
-        }
-
-        throw error;
-
-    } finally {
-        clearTimeout(timeout);
-        requestController = null;
+    const answer = data.choices?.[0]?.message?.content;
+    if (typeof answer !== "string" || !answer.trim()) {
+      throw new Error("The model returned an empty response. Please try again.");
     }
+    return answer.trim();
+  } catch (error) {
+    if (error.name === "AbortError") throw new Error("Request timed out after 60 seconds. Check your connection and try again.");
+    if (error instanceof TypeError) throw new Error("Could not connect to Groq. Check your internet connection. If the browser reports a CORS/network error, try another browser or network.");
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
-
-/* =========================================
-   SEND MESSAGE
-========================================= */
 
 async function sendMessage(text) {
-    text = text.trim();
+  text = text.trim();
+  if (!text || isLoading) return;
+  if (!apiKey) { openApiModal(); return; }
 
-    if (!text || isLoading) {
-        return;
-    }
+  addMessage("user", text);
+  promptInput.value = "";
+  resizeTextarea();
+  isLoading = true;
+  sendButton.disabled = true;
+  promptInput.disabled = true;
+  showTyping();
 
-    if (!apiKey) {
-        openApiModal();
-        return;
-    }
-
-    addMessage("user", text);
-
-    promptInput.value = "";
-    resizeTextarea();
-
-    isLoading = true;
-    sendButton.disabled = true;
-    promptInput.disabled = true;
-
-    showTyping();
-
-    try {
-        const answer = await getAIResponse(text);
-
-        removeTyping();
-
-        addMessage("assistant", answer);
-
-        /*
-          Only update conversation history after a successful response.
-        */
-        history.push({
-            role: "user",
-            content: text
-        });
-
-        history.push({
-            role: "assistant",
-            content: answer
-        });
-
-        if (history.length > MAX_HISTORY_MESSAGES) {
-            history = history.slice(-MAX_HISTORY_MESSAGES);
-        }
-
-    } catch (error) {
-        removeTyping();
-
-        addMessage(
-            "assistant",
-            "⚠️ " + error.message,
-            true
-        );
-
-    } finally {
-        isLoading = false;
-        sendButton.disabled = false;
-        promptInput.disabled = false;
-        promptInput.focus();
-    }
+  try {
+    const answer = await getAIResponse(text);
+    removeTyping();
+    addMessage("assistant", answer);
+    history.push({ role: "user", content: text }, { role: "assistant", content: answer });
+    if (history.length > MAX_HISTORY_MESSAGES) history = history.slice(-MAX_HISTORY_MESSAGES);
+  } catch (error) {
+    removeTyping();
+    addMessage("assistant", "⚠️ " + (error.message || "Something went wrong."), true);
+  } finally {
+    isLoading = false;
+    sendButton.disabled = false;
+    promptInput.disabled = false;
+    promptInput.focus();
+  }
 }
 
-/* =========================================
-   FORM EVENTS
-========================================= */
-
-chatForm.addEventListener("submit", function(event) {
-    event.preventDefault();
-    sendMessage(promptInput.value);
+chatForm.addEventListener("submit", e => {
+  e.preventDefault();
+  sendMessage(promptInput.value);
 });
-
-promptInput.addEventListener("keydown", function(event) {
-    if (
-        event.key === "Enter" &&
-        !event.shiftKey &&
-        !event.isComposing
-    ) {
-        event.preventDefault();
-        chatForm.requestSubmit();
-    }
+promptInput.addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
+    e.preventDefault();
+    chatForm.requestSubmit();
+  }
 });
-
 function resizeTextarea() {
-    promptInput.style.height = "auto";
-
-    promptInput.style.height =
-        Math.min(promptInput.scrollHeight, 150) + "px";
+  promptInput.style.height = "auto";
+  promptInput.style.height = Math.min(promptInput.scrollHeight, 150) + "px";
 }
-
 promptInput.addEventListener("input", resizeTextarea);
 
-/* =========================================
-   SUGGESTION BUTTONS
-========================================= */
-
 document.querySelectorAll(".suggestion").forEach(button => {
-    button.addEventListener("click", function() {
-        const text = this.getAttribute("data-prompt") || "";
-
-        if (!apiKey) {
-            openApiModal();
-            return;
-        }
-
-        promptInput.value = text;
-        resizeTextarea();
-        sendMessage(text);
-    });
+  button.addEventListener("click", () => {
+    const text = button.getAttribute("data-prompt") || "";
+    if (!apiKey) { openApiModal(); return; }
+    promptInput.value = text;
+    resizeTextarea();
+    sendMessage(text);
+  });
 });
 
-/* =========================================
-   INITIALIZE
-========================================= */
-
 loadSavedKey();
-
 </script>
-
 </body>
 </html>
