@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JPT 1.0 — AI Chat</title>
+
+<style>
+:root {
+  --bg: #0b0f19;
+  --panel: #111827;
+  --panel2: #1b2433;
+  --border: #293548;
+  --text: #f3f6fc;
+  --muted: #9aa8bb;
+  --blue: #3478f6;
+  --blue-hover: #2563eb;
+  --danger: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+button, input, textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.app {
+  width: 100%;
+  max-width: 900px;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.header {
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: var(--blue);
+  border-radius: 13px;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.brand {
+  min-width: 0;
+  flex: 1;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.status {
+  color: #55d99b;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.api-button {
+  border: 1px solid var(--border);
+  color: var(--text);
+  background: var(--panel2);
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.api-button:hover {
+  border-color: var(--blue);
+}
+
+.messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 20px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  scroll-behavior: smooth;
+}
+
+.welcome {
+  text-align: center;
+  margin: auto 0;
+  padding: 24px 10px;
+}
+
+.welcome-logo {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 18px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #3478f6, #8055ee);
+  font-size: 40px;
+  font-weight: 800;
+}
+
+.welcome h2 {
+  font-size: 25px;
+  margin: 0 0 10px;
+}
+
+.welcome p {
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.message {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.message.user {
+  justify-content: flex-end;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--panel2);
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.message.user .avatar {
+  order: 2;
+  background: var(--blue);
+}
+
+.bubble {
+  max-width: min(78%, 650px);
+  padding: 12px 14px;
+  border-radius: 15px;
+  background: var(--panel2);
+  font-size: 15px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.message.user .bubble {
+  background: var(--blue);
+  border-bottom-right-radius: 5px;
+}
+
+.message.bot .bubble {
+  border-bottom-left-radius: 5px;
+}
+
+.message.bot .bubble a {
+  color: #91b9ff;
+}
+
+.composer-wrap {
+  padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+}
+
+.composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 9px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  border-radius: 16px;
+}
+
+.composer:focus-within {
+  border-color: var(--blue);
+}
+
+#userInput {
+  flex: 1;
+  min-width: 0;
+  max-height: 140px;
+  resize: none;
+  outline: none;
+  border: 0;
+  color: var(--text);
+  background: transparent;
+  padding: 9px 7px;
+  line-height: 1.5;
+  font-size: 16px;
+}
+
+#userInput::placeholder {
+  color: #718096;
+}
+
+.send-button {
+  width: 43px;
+  height: 43px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 12px;
+  background: var(--blue);
+  color: white;
+  font-size: 19px;
+  font-weight: bold;
+}
+
+.send-button:hover {
+  background: var(--blue-hover);
+}
+
+.send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  padding-top: 9px;
+}
+
+.typing {
+  display: flex;
+  gap: 5px;
+  padding: 7px 3px;
+}
+
+.typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #9aa8bb;
+  animation: bounce 1s infinite ease-in-out;
+}
+
+.typing span:nth-child(2) {
+  animation-delay: .15s;
+}
+
+.typing span:nth-child(3) {
+  animation-delay: .3s;
+}
+
+@keyframes bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-5px); }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, .72);
+}
+
+.overlay.open {
+  display: flex;
+}
+
+.dialog {
+  width: 100%;
+  max-width: 440px;
+  max-height: 90dvh;
+  overflow-y: auto;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 20px 70px rgba(0, 0, 0, .4);
+}
+
+.dialog h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.dialog p, .dialog li {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.dialog ol {
+  padding-left: 20px;
+}
+
+.dialog a {
+  color: #8ab4ff;
+}
+
+.key-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.key-input-wrap input {
+  min-width: 0;
+  flex: 1;
+}
+
+.dialog input[type="password"],
+.dialog input[type="text"] {
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 13px;
+  border-radius: 10px;
+  outline: none;
+  margin-top: 8px;
+}
+
+.dialog input:focus {
+  border-color: var(--blue);
+}
+
+.show-button {
+  margin-top: 8px;
+  padding: 12px;
+  color: var(--text);
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 15px 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.checkbox-row input {
+  accent-color: var(--blue);
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.dialog-actions button {
+  flex: 1;
+  min-width: 90px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--panel2);
+  color: var(--text);
+}
+
+.dialog-actions .primary {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+.dialog-actions .remove {
+  color: #ff7777;
+}
+
+.key-error {
+  color: #ff8585 !important;
+  min-height: 18px;
+  font-size: 13px !important;
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 10px;
+  }
+
+  .brand h1 {
+    font-size: 17px;
+  }
+
+  .api-button {
+    padding: 9px;
+    font-size: 12px;
+  }
+
+  .messages {
+    padding: 16px 10px;
+  }
+
+  .bubble {
+    max-width: 84%;
+    font-size: 15px;
+  }
+
+  .dialog {
+    padding: 18px;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <header class="header">
+    <div class="logo">J</div>
+
+    <div class="brand">
+      <h1>JPT 1.0</h1>
+      <div class="status" id="statusText">● Ready to chat</div>
+    </div>
+
+    <button class="api-button" id="apiButton" type="button">
+      Add API Key
+    </button>
+  </header>
+
+  <main class="messages" id="messages" aria-live="polite">
+    <div class="welcome" id="welcome">
+      <div class="welcome-logo">J</div>
+      <h2>Welcome to JPT 1.0</h2>
+      <p>Your AI assistant, built by Jaimin Barot.<br>
+      Add your Gemini API key to start chatting.</p>
+    </div>
+  </main>
+
+  <div class="composer-wrap">
+    <form class="composer" id="chatForm">
+      <textarea
+        id="userInput"
+        rows="1"
+        maxlength="12000"
+        placeholder="Message JPT..."
+        aria-label="Your message"
+      ></textarea>
+
+      <button class="send-button" id="sendButton" type="submit"
+        aria-label="Send message">➤</button>
+    </form>
+
+    <div class="footer">JPT 1.0 · Created by Jaimin Barot</div>
+  </div>
+</div>
+
+<!-- API KEY DIALOG -->
+<div class="overlay" id="keyOverlay" role="dialog"
+  aria-modal="true" aria-labelledby="dialogTitle">
+
+  <div class="dialog">
+    <h2 id="dialogTitle">Connect Gemini API</h2>
+
+    <p>
+      Follow these steps to create your API key:
+    </p>
+
+    <ol>
+      <li>
+        Open
+        <a href="https://aistudio.google.com/app/apikey"
+          target="_blank" rel="noopener noreferrer">Google AI Studio</a>.
+      </li>
+      <li>Sign in and create an API key.</li>
+      <li>Copy the key and paste it below.</li>
+    </ol>
+
+    <label for="apiKeyInput">Gemini API key</label>
+
+    <div class="key-input-wrap">
+      <input id="apiKeyInput" type="password"
+        placeholder="Paste your API key here"
+        autocomplete="off" spellcheck="false">
+
+      <button class="show-button" id="showKeyButton"
+        type="button">Show</button>
+    </div>
+
+    <label class="checkbox-row">
+      <input id="rememberKey" type="checkbox">
+      Remember on this device
+    </label>
+
+    <p class="key-error" id="keyError" role="alert"></p>
+
+    <div class="dialog-actions">
+      <button type="button" id="cancelKeyButton">Cancel</button>
+      <button type="button" class="remove" id="removeKeyButton">
+        Remove key
+      </button>
+      <button type="button" class="primary" id="saveKeyButton">
+        Save key
+      </button>
+    </div>
+
+    <p>
+      Your key is sent to Google's Gemini API to process your messages.
+      Only save it on a device you trust.
+    </p>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   JPT 1.0 CONFIGURATION
+   If Google reports "model not found", check the available
+   model names in Google AI Studio and change MODEL_NAME.
+========================================================= */
+
+const MODEL_NAME = "gemini-3.8-flash";
+
+const API_URL =
+  "https://generativelanguage.googleapis.com/v1beta/models/" +
+  MODEL_NAME +
+  ":generateContent";
+
+const SYSTEM_INSTRUCTION =
+  "You are JPT 1.0, a helpful, intelligent AI assistant built by " +
+  "Jaimin Barot. Answer clearly, accurately and naturally. " +
+  "Use the conversation history to understand follow-up questions. " +
+  "If you are uncertain, say so instead of inventing facts. " +
+  "Format answers with readable paragraphs and lists when useful.";
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let apiKey = "";
+let conversation = [];
+let isSending = false;
+let activeController = null;
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const messagesEl = document.getElementById("messages");
+const welcomeEl = document.getElementById("welcome");
+const inputEl = document.getElementById("userInput");
+const formEl = document.getElementById("chatForm");
+const sendButton = document.getElementById("sendButton");
+const apiButton = document.getElementById("apiButton");
+const statusText = document.getElementById("statusText");
+
+const overlay = document.getElementById("keyOverlay");
+const apiKeyInput = document.getElementById("apiKeyInput");
+const rememberKey = document.getElementById("rememberKey");
+const keyError = document.getElementById("keyError");
+const showKeyButton = document.getElementById("showKeyButton");
+
+/* =========================================================
+   API KEY MANAGEMENT
+========================================================= */
+
+function loadSavedKey() {
+  try {
+    const saved = localStorage.getItem("jpt_gemini_api_key");
+
+    if (saved && saved.trim().length >= 20) {
+      apiKey = saved.trim();
+    }
+  } catch (error) {
+    console.warn("Saved API key could not be read.");
+  }
+
+  updateKeyUI();
+}
+
+function updateKeyUI() {
+  apiButton.textContent = apiKey ? "Change Key" : "Add API Key";
+
+  if (apiKey) {
+    statusText.textContent = "● API connected";
+    statusText.style.color = "#55d99b";
+  } else {
+    statusText.textContent = "● Basic mode";
+    statusText.style.color = "#9aa8bb";
+  }
+}
+
+function openKeyDialog() {
+  keyError.textContent = "";
+  apiKeyInput.value = apiKey;
+  apiKeyInput.type = "password";
+  showKeyButton.textContent = "Show";
+  rememberKey.checked = false;
+  overlay.classList.add("open");
+
+  setTimeout(() => apiKeyInput.focus(), 50);
+}
+
+function closeKeyDialog() {
+  overlay.classList.remove("open");
+  keyError.textContent = "";
+  apiKeyInput.type = "password";
+  showKeyButton.textContent = "Show";
+}
+
+function saveApiKey() {
+  const value = apiKeyInput.value.trim();
+
+  if (value.length < 20 || /\s/.test(value)) {
+    keyError.textContent =
+      "Enter a valid API key (at least 20 characters, without spaces).";
+    return;
+  }
+
+  apiKey = value;
+
+  if (rememberKey.checked) {
+    try {
+      localStorage.setItem("jpt_gemini_api_key", apiKey);
+    } catch (error) {
+      keyError.textContent =
+        "The key works for this session, but could not be saved on this device.";
+    }
+  } else {
+    try {
+      localStorage.removeItem("jpt_gemini_api_key");
+    } catch (error) {
+      console.warn("Could not remove the previously saved key.");
+    }
+  }
+
+  updateKeyUI();
+  closeKeyDialog();
+
+  addMessage(
+    "bot",
+    "API key configured. You can now ask me questions."
+  );
+}
+
+function removeApiKey() {
+  apiKey = "";
+
+  try {
+    localStorage.removeItem("jpt_gemini_api_key");
+  } catch (error) {
+    console.warn("Could not remove the saved key.");
+  }
+
+  updateKeyUI();
+  closeKeyDialog();
+
+  addMessage("bot", "API key removed. Basic mode is now active.");
+}
+
+apiButton.addEventListener("click", openKeyDialog);
+
+document.getElementById("saveKeyButton")
+  .addEventListener("click", saveApiKey);
+
+document.getElementById("cancelKeyButton")
+  .addEventListener("click", closeKeyDialog);
+
+document.getElementById("removeKeyButton")
+  .addEventListener("click", removeApiKey);
+
+showKeyButton.addEventListener("click", () => {
+  const showing = apiKeyInput.type === "text";
+  apiKeyInput.type = showing ? "password" : "text";
+  showKeyButton.textContent = showing ? "Show" : "Hide";
+});
+
+overlay.addEventListener("click", event => {
+  if (event.target === overlay) closeKeyDialog();
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") closeKeyDialog();
+});
+
+/* =========================================================
+   CHAT UI
+========================================================= */
+
+function scrollToBottom() {
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function addMessage(role, text) {
+  if (welcomeEl && welcomeEl.isConnected) {
+    welcomeEl.remove();
+  }
+
+  const row = document.createElement("div");
+  row.className = "message " + (role === "user" ? "user" : "bot");
+
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.textContent = role === "user" ? "You" : "J";
+
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+
+  // Render plain text safely; never insert API responses as HTML.
+  bubble.textContent = String(text);
+
+  row.appendChild(avatar);
+  row.appendChild(bubble);
+  messagesEl.appendChild(row);
+
+  scrollToBottom();
+  return row;
+}
+
+function showTyping() {
+  if (welcomeEl && welcomeEl.isConnected) {
+    welcomeEl.remove();
+  }
+
+  const row = document.createElement("div");
+  row.className = "message bot";
+  row.id = "typingIndicator";
+
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.textContent = "J";
+
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+
+  const dots = document.createElement("div");
+  dots.className = "typing";
+  dots.innerHTML = "<span></span><span></span><span></span>";
+
+  bubble.appendChild(dots);
+  row.appendChild(avatar);
+  row.appendChild(bubble);
+  messagesEl.appendChild(row);
+
+  scrollToBottom();
+}
+
+function removeTyping() {
+  const typing = document.getElementById("typingIndicator");
+  if (typing) typing.remove();
+}
+
+function setBusy(value) {
+  isSending = value;
+  sendButton.disabled = value;
+  inputEl.disabled = value;
+  statusText.textContent = value ? "● Thinking..." :
+    (apiKey ? "● API connected" : "● Basic mode");
+
+  statusText.style.color = value ? "#8ab4ff" :
+    (apiKey ? "#55d99b" : "#9aa8bb");
+}
+
+/* =========================================================
+   BASIC MODE REPLIES
+========================================================= */
+
+function basicReply(message) {
+  const text = message.toLowerCase().trim();
+
+  if (/^(hi|hello|hey|hello jpt|hi jpt)[!. ]*$/.test(text)) {
+    return "Hello! 👋 I'm JPT 1.0, created by Jaimin Barot. How can I help you?";
+  }
+
+  if (/^(thanks|thank you|thx|thankyou)[!. ]*$/.test(text)) {
+    return "You're welcome! 😊";
+  }
+
+  if (/^(bye|goodbye|see you)[!. ]*$/.test(text)) {
+    return "Goodbye! 👋 Come back whenever you need help.";
+  }
+
+  if (/who (made|built|created) you|your creator|who is your developer/.test(text)) {
+    return "I am JPT 1.0, created by Jaimin Barot.";
+  }
+
+  if (/who are you|what are you/.test(text)) {
+    return "I'm JPT 1.0, an AI chat assistant built by Jaimin Barot. Add a Gemini API key to enable AI-powered answers.";
+  }
+
+  return null;
+}
+
+/* =========================================================
+   WORLD CLOCK
+========================================================= */
+
+const timeZones = [
+  { names: ["india", "indian", "gujarat", "ahmedabad", "vadodara",
+            "baroda", "mumbai", "delhi", "kolkata", "chennai"],
+    zone: "Asia/Kolkata", label: "India" },
+
+  { names: ["usa", "us", "united states", "new york", "washington",
+            "los angeles", "chicago", "america"],
+    zone: "America/New_York", label: "USA (Eastern Time)" },
+
+  { names: ["uk", "united kingdom", "london", "england", "britain"],
+    zone: "Europe/London", label: "United Kingdom" },
+
+  { names: ["japan", "tokyo"],
+    zone: "Asia/Tokyo", label: "Japan" },
+
+  { names: ["australia", "sydney", "melbourne", "perth"],
+    zone: "Australia/Sydney", label: "Australia (Sydney)" },
+
+  { names: ["dubai", "uae", "united arab emirates"],
+    zone: "Asia/Dubai", label: "Dubai" },
+
+  { names: ["singapore"],
+    zone: "Asia/Singapore", label: "Singapore" },
+
+  { names: ["paris", "france"],
+    zone: "Europe/Paris", label: "France" },
+
+  { names: ["germany", "berlin"],
+    zone: "Europe/Berlin", label: "Germany" },
+
+  { names: ["nepal", "kathmandu"],
+    zone: "Asia/Kathmandu", label: "Nepal" },
+
+  { names: ["china", "beijing", "shanghai"],
+    zone: "Asia/Shanghai", label: "China" },
+
+  { names: ["saudi arabia", "riyadh"],
+    zone: "Asia/Riyadh", label: "Saudi Arabia" }
+];
+
+function getClockReply(message) {
+  const text = message.toLowerCase();
+
+  if (!/\b(time|clock|date|today)\b/.test(text)) {
+    return null;
+  }
+
+  let target = null;
+
+  for (const item of timeZones) {
+    if (item.names.some(name => text.includes(name))) {
+      target = item;
+      break;
+    }
+  }
+
+  const zone = target ? target.zone :
+    Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const label = target ? target.label : "Your device's local time";
+
+  try {
+    const now = new Date();
+
+    const time = new Intl.DateTimeFormat("en-US", {
+      timeZone: zone,
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true
+    }).format(now);
+
+    const date = new Intl.DateTimeFormat("en-US", {
+      timeZone: zone,
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    }).format(now);
+
+    return "🕒 " + label + "\nTime: " + time +
+      "\nDate: " + date + "\nTime zone: " + zone;
+  } catch (error) {
+    return "I couldn't determine that time zone. Try a city such as London, Tokyo, Dubai or Ahmedabad.";
+  }
+}
+
+/* =========================================================
+   GEMINI API
+========================================================= */
+
+async function askGemini(message) {
+  const controller = new AbortController();
+  activeController = controller;
+
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+  // Only successful turns are stored, so failed requests do not
+  // corrupt the conversation history.
+  const requestHistory = [
+    ...conversation,
+    { role: "user", parts: [{ text: message }] }
+  ];
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": apiKey
+      },
+      body: JSON.stringify({
+        systemInstruction: {
+          parts: [{ text: SYSTEM_INSTRUCTION }]
+        },
+        contents: requestHistory,
+        generationConfig: {
+          temperature: 0.7,
+          topP: 0.95,
+          maxOutputTokens: 4096
+        }
+      }),
+      signal: controller.signal
+    });
+
+    let data;
+
+    try {
+      data = await response.json();
+    } catch (error) {
+      throw new Error("Google returned an unreadable response. Please try again.");
+    }
+
+    if (!response.ok) {
+      const apiMessage = data?.error?.message ||
+        ("HTTP " + response.status);
+
+      if (response.status === 400) {
+        throw new Error("Gemini rejected the request: " + apiMessage);
+      }
+
+      if (response.status === 401 || response.status === 403) {
+        throw new Error(
+          "API key rejected or permission denied. Check your key and API access. " +
+          apiMessage
+        );
+      }
+
+      if (response.status === 404) {
+        throw new Error(
+          "Gemini model not found: " + MODEL_NAME +
+          ". Check the model name supported by your API key in Google AI Studio."
+        );
+      }
+
+      if (response.status === 429) {
+        throw new Error(
+          "Gemini rate limit or quota reached. Wait a moment and try again. " +
+          apiMessage
+        );
+      }
+
+      throw new Error("Gemini API error: " + apiMessage);
+    }
+
+    if (data.promptFeedback?.blockReason) {
+      throw new Error(
+        "Google blocked this prompt: " + data.promptFeedback.blockReason
+      );
+    }
+
+    const candidate = data.candidates?.[0];
+
+    if (!candidate) {
+      throw new Error("Gemini returned no answer. Please try rephrasing your message.");
+    }
+
+    const answer = (candidate.content?.parts || [])
+      .map(part => part.text || "")
+      .join("")
+      .trim();
+
+    if (!answer) {
+      throw new Error(
+        "Gemini returned an empty answer. Please try again with a different question."
+      );
+    }
+
+    // Store the user and model messages only after a successful response.
+    conversation = [
+      ...requestHistory,
+      { role: "model", parts: [{ text: answer }] }
+    ];
+
+    return answer;
+
+  } catch (error) {
+    if (error.name === "AbortError") {
+      throw new Error(
+        "No response from Google after 30 seconds. Check your internet connection and try again."
+      );
+    }
+
+    if (error instanceof TypeError) {
+      throw new Error(
+        "Could not connect to Gemini. Check your internet connection, browser permissions and API access, then try again."
+      );
+    }
+
+    throw error;
+
+  } finally {
+    clearTimeout(timeoutId);
+
+    if (activeController === controller) {
+      activeController = null;
+    }
+  }
+}
+
+/* =========================================================
+   SEND MESSAGE
+========================================================= */
+
+async function sendMessage(rawMessage) {
+  const message = rawMessage.trim();
+
+  if (!message || isSending) return;
+
+  addMessage("user", message);
+
+  inputEl.value = "";
+  resizeInput();
+
+  // Local clock works with or without an API key.
+  const clockReply = getClockReply(message);
+
+  if (clockReply) {
+    addMessage("bot", clockReply);
+    return;
+  }
+
+  // Basic responses work without an API key.
+  if (!apiKey) {
+    const reply = basicReply(message);
+
+    if (reply) {
+      addMessage("bot", reply);
+    } else {
+      addMessage(
+        "bot",
+        "To answer that question, please tap “Add API Key” and connect your Gemini API key."
+      );
+    }
+
+    return;
+  }
+
+  setBusy(true);
+  showTyping();
+
+  try {
+    const answer = await askGemini(message);
+    removeTyping();
+    addMessage("bot", answer);
+
+  } catch (error) {
+    removeTyping();
+    addMessage("bot", "⚠️ " + error.message);
+
+  } finally {
+    removeTyping();
+    setBusy(false);
+    inputEl.focus();
+  }
+}
+
+formEl.addEventListener("submit", event => {
+  event.preventDefault();
+  sendMessage(inputEl.value);
+});
+
+inputEl.addEventListener("keydown", event => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+
+    if (!isSending) {
+      sendMessage(inputEl.value);
+    }
+  }
+});
+
+function resizeInput() {
+  inputEl.style.height = "auto";
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + "px";
+}
+
+inputEl.addEventListener("input", resizeInput);
+
+/* =========================================================
+   STARTUP
+========================================================= */
+
+loadSavedKey();
+inputEl.focus();
+</script>
+</body>
+</html>
